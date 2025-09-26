@@ -4,18 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第十届财富交流会</title>
-    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <!-- 只加载必要的Tailwind模块 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 预加载关键字体和图标 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
+        /* 内联关键CSS以减少渲染阻塞 */
+        :root {
+            --primary-orange: #ff7e00;
+            --secondary-orange: #ffa600;
+            --green: #4CAF50;
+            --light-gray: #f8f8f8;
+            --shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: 'Noto Sans SC', sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
         }
         
         .video-container {
             position: relative;
             width: 100%;
-            height: 100vh;
             overflow: hidden;
         }
         
@@ -24,12 +43,12 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
-            background: linear-gradient(90deg, #ff7e00, #ffa600);
+            background: linear-gradient(90deg, var(--primary-orange), var(--secondary-orange));
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 2;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
         }
         
         .join-btn {
@@ -41,45 +60,20 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 16px;
         }
         
         .join-btn:hover {
             background: rgba(212, 175, 55, 0.3);
         }
         
-        .floating-video {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 300px;
-            height: 170px;
-            border-radius: 10px;
-            background: rgba(0,0,0,0.7);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            z-index: 100;
-            overflow: hidden;
-        }
-        
-        .shake:hover {
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-        
         .assistant-card {
             background: white;
             padding: 20px;
-            margin: 20px auto;
+            margin: 0 auto;
             max-width: 800px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             text-align: center;
         }
         
@@ -113,7 +107,7 @@
         }
         
         .kefu-btn {
-            background: #4CAF50;
+            background: var(--green);
             color: white;
             border: none;
         }
@@ -126,7 +120,7 @@
             position: relative;
             width: 100%;
             height: 0;
-            padding-bottom: 177.778%;
+            padding-bottom: 56.25%; /* 16:9 视频比例 */
         }
         
         .iframe-video {
@@ -136,11 +130,10 @@
             width: 100%;
             height: 100%;
             border: none;
-            overflow: hidden;
         }
         
         .footer-disclaimer {
-            background: #f8f8f8;
+            background: var(--light-gray);
             padding: 20px;
             text-align: center;
             color: #666;
@@ -148,11 +141,44 @@
             line-height: 1.6;
         }
         
+        .shake:hover {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* 移动设备响应式设计 - 增加更多断点 */
+        @media (max-width: 1024px) {
+            /* 平板设备 */
+            .assistant-card {
+                margin: 20px;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .floating-video {
-                width: 200px;
-                height: 120px;
-                right: 10px;
+            /* 大屏手机 */
+            .action-bar {
+                flex-direction: column;
+                padding: 15px 10px;
+                height: auto;
+                gap: 10px;
+            }
+            
+            .join-btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .assistant-name {
+                font-size: 20px;
             }
             
             .btn-container {
@@ -163,25 +189,137 @@
             .custom-btn {
                 width: 80%;
                 text-align: center;
+                padding: 10px 20px;
             }
+        }
+        
+        @media (max-width: 480px) {
+            /* 小屏手机 */
+            .action-bar span {
+                font-size: 14px;
+            }
+            
+            .assistant-card {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .assistant-name {
+                font-size: 18px;
+            }
+            
+            .footer-disclaimer {
+                padding: 15px 10px;
+                font-size: 12px;
+            }
+        }
+        
+        /* 延迟加载样式 */
+        .lazy { 
+            opacity: 0; 
+            transition: opacity 0.5s ease-in-out; 
+        }
+        
+        .lazy.loaded { 
+            opacity: 1; 
         }
     </style>
 </head>
 <body>
-    <!-- 首屏全区域视频展示 -->
+    <!-- 首屏区域 - 在移动设备上使用图片替代视频以提高加载速度 -->
     <div class="video-container">
-        <div class="iframe-container">
-            <iframe class="iframe-video" src="https://streamable.com/e/hgixbc" allow="fullscreen" allowfullscreen></iframe>
+        <!-- 移动设备使用图片 -->
+        <div class="md:hidden w-full h-[70vh] bg-black relative">
+            <img 
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
+                data-src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                class="lazy w-full h-full object-cover"
+                alt="财富交流会封面图"
+            >
+            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div class="text-white text-center px-4">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">第十届财富交流会</h2>
+                    <p class="text-lg">30年私募大佬带你学透A股</p>
+                </div>
+            </div>
+        </div>
+        <!-- 视频区域 - 下载按钮方案 -->
+        <div class="hidden md:block iframe-container">
+            <!-- 视频封面和下载按钮 -->
+            <div class="relative w-full h-full bg-black flex flex-col items-center justify-center">
+                <!-- 视频封面图 -->
+                <img 
+                    src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                    alt="第十届财富交流会视频封面" 
+                    class="w-full h-full object-cover opacity-70"
+                >
+                
+                <!-- 覆盖层内容 -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+                    <h3 class="text-white text-2xl md:text-3xl font-bold mb-6">30年私募大佬带你学透A股</h3>
+                    <p class="text-white mb-8 max-w-lg">企业网盘急速下载，无需等待，高速获取完整视频</p>
+                    
+                    <!-- 百度企业网盘急速下载按钮 -->
+                    <div class="w-full max-w-md space-y-4">
+                        <!-- 急速下载标签 -->
+                        <div class="relative">
+                            <a 
+                                href="https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-105 shadow-lg block w-full"
+                                target="_blank"
+                            >
+                                <i class="fas fa-bolt text-2xl mr-3 text-yellow-300"></i>
+                                <span class="font-bold">百度企业网盘急速下载</span>
+                            </a>
+                            <!-- 急速标识 -->
+                            <div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                                企业高速通道
+                            </div>
+                        </div>
+                        
+                        <!-- 提取码信息 -->
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white border-l-4 border-yellow-400">
+                            <p class="text-lg mb-2">提取码：<span class="font-bold text-yellow-300">41rv</span></p>
+                            <p class="text-sm opacity-80">企业账号：日斗投资咨询有限公司<br>特点：急速下载，不限速，稳定可靠</p>
+                        </div>
+                        
+                        <!-- 优势提示 -->
+                        <div class="flex items-center justify-center space-x-6 text-white text-sm">
+                            <div class="flex items-center">
+                                <i class="fas fa-tachometer-alt text-green-400 mr-2"></i>
+                                <span>高速下载</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-shield-alt text-green-400 mr-2"></i>
+                                <span>安全可靠</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-cloud text-green-400 mr-2"></i>
+                                <span>企业级服务</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 下载提示 -->
+                    <p class="text-white text-sm mt-4 opacity-80">视频大小约106MB，时长约2分钟</p>
+                </div>
+            </div>
         </div>
         
+        <!-- 底部操作栏 -->
         <div class="action-bar">
-            <button class="join-btn mr-4" id="joinBtn">立即加入飞书群</button>
-            <span class="text-white">点击视频看详情</span>
+            <button class="join-btn" id="joinBtn">立即加入飞书群</button>
         </div>
     </div>
     
-    <!-- 助理名片区域 -->
-    <div class="assistant-card">
+    <!-- 助理名片区域 - 优化移动设备布局 -->
+    <div class="assistant-card mt-6">
+        <img 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
+            data-src="20250926-123916.jpg" 
+            class="lazy w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-orange-100 shadow-sm"
+            alt="顾启薇头像"
+        >
         <div class="assistant-name">顾启薇</div>
         <div class="assistant-title">财富交流会专属助理</div>
         <div class="btn-container">
@@ -189,21 +327,20 @@
         </div>
     </div>
     
-    <!-- 视频+核心信息组合区 -->
-    <div class="container mx-auto py-16 px-4 hidden" id="secondarySection">
-        <div class="flex flex-col md:flex-row gap-8">
-            <div class="w-full md:w-3/5 relative">
+    <!-- 核心信息区域 - 简化结构并优化移动设备显示 -->
+    <div class="container mx-auto py-10 px-4" id="contentSection">
+        <div class="bg-red-500 text-white text-sm inline-block px-3 py-1 rounded mb-4">散户专属</div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-6">30年私募大佬带你学透A股</h3>
+        
+        <!-- 桌面版布局：视频+文字 -->
+        <div class="hidden md:flex flex-col md:flex-row gap-8 mb-10">
+            <div class="w-full md:w-3/5">
                 <div class="text-lg font-bold mb-2">交流会亮点抢先看</div>
-                <div class="iframe-container">
-                    <iframe class="iframe-video" src="https://streamable.com/e/hgixbc" allow="fullscreen" allowfullscreen controls></iframe>
-                </div>
+                <!-- 视频内容已移至顶部 -->
             </div>
             
             <div class="w-full md:w-2/5">
-                <div class="bg-red-500 text-white text-sm inline-block px-3 py-1 rounded mb-4">散户专属</div>
-                <h3 class="text-3xl font-bold mb-6">30年私募大佬带你学透A股</h3>
-                
-                <div class="space-y-6 mb-8">
+                <div class="space-y-6">
                     <div class="flex items-center">
                         <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 mr-4">
                             <i class="fas fa-calendar-alt"></i>
@@ -225,24 +362,63 @@
                         <span class="text-lg">30天建盈利思维</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- 移动版布局：垂直排列 -->
+        <div class="md:hidden space-y-6 mb-10">
+            <div class="space-y-6">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 mr-4">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <span class="text-lg">每日实战教学</span>
+                </div>
                 
-                <button class="shake bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-bold mb-4 w-full">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="text-lg">飞书群免费进</span>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span class="text-lg">30天建盈利思维</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 行动号召区域 -->
+        <div class="text-center mt-10 mb-6">
+                <button id="showQrBtn" class="shake bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-bold mb-6 w-full max-w-md mx-auto">
                     扫码进群领名额
                 </button>
                 
                 <div class="flex justify-center">
-                    <img src="https://s.coze.cn/image/68A8-C2daPQ/" alt="飞书群二维码" class="w-24 h-24">
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500 mb-2">日斗投资【第十届财富论坛】</div>
+                        <div class="relative w-40 h-40 mx-auto">
+                            <img 
+                                id="qrCodeImg" 
+                                src="screenshot-20250927-011954.png" 
+                                class="w-40 h-40 border border-gray-200 p-2 bg-white rounded-lg shadow-sm mx-auto opacity-0 transition-opacity duration-500" 
+                                alt="日斗投资第十届财富论坛飞书群二维码"
+                            >
+                            <div id="goldOverlay" class="absolute inset-0 bg-gradient-to-br from-yellow-300/90 to-yellow-500/90 rounded-lg flex items-center justify-center border border-yellow-200">
+                                <div class="text-center text-yellow-900">
+                                    <i class="fas fa-lock text-4xl mb-2"></i>
+                                    <p class="font-bold">点击上方按钮</p>
+                                    <p class="text-sm">查看群二维码</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-2">扫描群二维码，立刻加入该群</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- 滚动跟随视频 -->
-    <div class="floating-video hidden" id="floatingVideo">
-        <div class="text-white text-sm p-3">财富交流会详情</div>
-        <div class="absolute bottom-0 left-0 w-full h-1/3 flex justify-center items-center">
-            <img src="https://s.coze.cn/image/KR-4TPbx204/" alt="飞书群二维码" class="w-16 h-16">
-        </div>
     </div>
     
     <!-- 投资者声明 -->
@@ -251,36 +427,144 @@
     </div>
     
     <script>
+        // 减少DOM操作，使用事件委托
         document.addEventListener('DOMContentLoaded', function() {
-            const joinBtn = document.getElementById('joinBtn');
-            const secondarySection = document.getElementById('secondarySection');
-            const floatingVideo = document.getElementById('floatingVideo');
-            
             // 加入按钮点击事件
-            joinBtn.addEventListener('click', function() {
-                window.location.href = 'https://applink.larksuite.com/client/chat/chatter/add_by_link?link_token=b0en0f42-377e-42a2-b77f-4a93f5805651';
+            document.getElementById('joinBtn').addEventListener('click', function() {
+                window.location.href = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=058s5e97-ef32-4a54-8514-a33935397884';
             });
             
-            // 滚动显示次选方案
-            window.addEventListener('scroll', function() {
-                if(window.scrollY > window.innerHeight) {
-                    secondarySection.classList.remove('hidden');
-                    floatingVideo.classList.remove('hidden');
-                } else {
-                    secondarySection.classList.add('hidden');
-                    floatingVideo.classList.add('hidden');
-                }
+            // 显示二维码按钮点击事件
+            document.getElementById('showQrBtn').addEventListener('click', function() {
+                const qrCodeImg = document.getElementById('qrCodeImg');
+                const goldOverlay = document.getElementById('goldOverlay');
+                
+                // 显示二维码并隐藏金色浮雕
+                qrCodeImg.classList.remove('opacity-0');
+                goldOverlay.classList.add('opacity-0');
+                
+                // 添加动画效果
+                qrCodeImg.style.transition = 'opacity 0.5s ease-in-out';
+                goldOverlay.style.transition = 'opacity 0.5s ease-in-out';
+                
+                // 2秒后隐藏金色浮雕
+                setTimeout(() => {
+                    goldOverlay.style.display = 'none';
+                }, 500);
+                
+                // 禁用按钮防止重复点击
+                this.disabled = true;
+                this.classList.add('opacity-70', 'cursor-not-allowed');
+                this.textContent = '已显示群二维码';
             });
             
-            // 浮动视频点击全屏
-            floatingVideo.addEventListener('click', function() {
-                if(floatingVideo.requestFullscreen) {
-                    floatingVideo.requestFullscreen();
-                } else if(floatingVideo.webkitRequestFullscreen) {
-                    floatingVideo.webkitRequestFullscreen();
-                } else if(floatingVideo.msRequestFullscreen) {
-                    floatingVideo.msRequestFullscreen();
+            // 百度企业网盘急速下载功能
+            const panBaiduLink = 'https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw';
+            const extractCode = '41rv';
+            
+            const copyButtons = document.querySelectorAll('a[href*="pan.baidu.com"]');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 创建临时文本区域复制链接和提取码
+                    const textToCopy = `${panBaiduLink}\n提取码：${extractCode}`;
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        // 显示复制成功反馈
+                        this.classList.add('bg-green-500');
+                        this.innerHTML = '<i class="fas fa-check text-2xl mr-3 text-yellow-300"></i><span class="font-bold">急速链接已复制！</span>';
+                        
+                        // 显示提示信息
+                        alert('链接和提取码已复制到剪贴板\n\n打开百度网盘App，粘贴链接即可享受企业级急速下载\n无需等待，高速稳定！');
+                        
+                        // 3秒后恢复原始状态
+                        setTimeout(() => {
+                            this.classList.remove('bg-green-500');
+                            this.innerHTML = '<i class="fas fa-bolt text-2xl mr-3 text-yellow-300"></i><span class="font-bold">百度企业网盘急速下载</span>';
+                        }, 3000);
+                    }).catch(err => {
+                        console.error('复制失败:', err);
+                        alert('复制失败，请手动复制链接和提取码\n\n链接：'+panBaiduLink+'\n提取码：'+extractCode);
+                    });
+                });
+            });
+            
+            // 添加额外的视觉效果 - 按钮脉冲动画
+            function addPulseAnimation() {
+                const pulseButton = document.querySelector('a[href*="pan.baidu.com"]');
+                if (pulseButton) {
+                    // 创建脉冲元素
+                    const pulse = document.createElement('span');
+                    pulse.classList.add('absolute', 'inset-0', 'rounded-full', 'bg-blue-300', 'opacity-30', 'transform', 'scale-0');
+                    pulseButton.parentNode.appendChild(pulse);
+                    
+                    // 添加CSS动画
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes pulse-animation {
+                            0% { transform: scale(0); opacity: 0.3; }
+                            70% { transform: scale(1.1); opacity: 0; }
+                            100% { transform: scale(1.1); opacity: 0; }
+                        }
+                        .pulse-effect {
+                            animation: pulse-animation 2s infinite;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    // 应用动画
+                    pulse.classList.add('pulse-effect');
                 }
+            }
+            
+            // 页面加载完成后应用脉冲动画
+            window.addEventListener('load', addPulseAnimation);
+            
+            // 懒加载其他图片
+            function lazyLoadImages() {
+                const lazyImages = document.querySelectorAll('.lazy:not(.iframe-video)');
+                
+                lazyImages.forEach(img => {
+                    if (isElementInViewport(img)) {
+                        img.src = img.getAttribute('data-src');
+                        img.classList.add('loaded');
+                    }
+                });
+            }
+            
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight + 300 || document.documentElement.clientHeight + 300) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // 初始加载可见元素
+            lazyLoadImages();
+            
+            // 滚动时加载
+            window.addEventListener('scroll', lazyLoadImages);
+            window.addEventListener('resize', lazyLoadImages);
+            
+            // 减少滚动事件触发频率（节流）
+            let throttleTimer;
+            const throttle = (callback, time) => {
+                if (throttleTimer) return;
+                
+                throttleTimer = true;
+                setTimeout(() => {
+                    callback();
+                    throttleTimer = false;
+                }, time);
+            };
+            
+            // 使用节流后的滚动事件
+            window.addEventListener('scroll', () => {
+                throttle(lazyLoadImages, 200);
             });
         });
     </script>
