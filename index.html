@@ -264,7 +264,7 @@
                         <!-- 急速下载标签 -->
                         <div class="relative">
                             <a 
-                                href="https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw" 
+                                href="https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw?pwd=41rv" 
                                 class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-105 shadow-lg block w-full"
                                 target="_blank"
                             >
@@ -278,8 +278,8 @@
                         </div>
                         
                         <!-- 提取码信息 -->
-                        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white border-l-4 border-yellow-400">
-                            <p class="text-lg mb-2">提取码：<span class="font-bold text-yellow-300">41rv</span></p>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white border-l-4 border-green-400">
+                            <p class="text-lg mb-2 font-bold text-green-300">提取码已自动包含在链接中，无需额外输入</p>
                             <p class="text-sm opacity-80">企业账号：日斗投资咨询有限公司<br>特点：急速下载，不限速，稳定可靠</p>
                         </div>
                         
@@ -431,7 +431,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // 加入按钮点击事件
             document.getElementById('joinBtn').addEventListener('click', function() {
-                window.location.href = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=058s5e97-ef32-4a54-8514-a33935397884';
+                window.location.href = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=03cr4f67-7571-4b4e-bdd5-560767ad82ab';
             });
             
             // 显示二维码按钮点击事件
@@ -458,37 +458,34 @@
                 this.textContent = '已显示群二维码';
             });
             
-            // 百度企业网盘急速下载功能
-            const panBaiduLink = 'https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw';
-            const extractCode = '41rv';
-            
-            const copyButtons = document.querySelectorAll('a[href*="pan.baidu.com"]');
-            copyButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
+            // 百度企业网盘急速下载功能 - 提取码已内置在链接中
+        const panBaiduLink = 'https://pan.baidu.com/s/1myV7oNLBy62mCTHdhAO7Xw?pwd=41rv';
+        
+        const copyButtons = document.querySelectorAll('a[href*="pan.baidu.com"]');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 复制已包含提取码的完整链接
+                navigator.clipboard.writeText(panBaiduLink).then(() => {
+                    // 显示复制成功反馈
+                    this.classList.add('bg-green-500');
+                    this.innerHTML = '<i class="fas fa-check text-2xl mr-3 text-yellow-300"></i><span class="font-bold">急速链接已复制！</span>';
                     
-                    // 创建临时文本区域复制链接和提取码
-                    const textToCopy = `${panBaiduLink}\n提取码：${extractCode}`;
+                    // 显示提示信息
+                    alert('链接已复制到剪贴板（提取码已内置）\n\n打开百度网盘App，粘贴链接即可直接下载\n无需额外输入提取码！');
                     
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        // 显示复制成功反馈
-                        this.classList.add('bg-green-500');
-                        this.innerHTML = '<i class="fas fa-check text-2xl mr-3 text-yellow-300"></i><span class="font-bold">急速链接已复制！</span>';
-                        
-                        // 显示提示信息
-                        alert('链接和提取码已复制到剪贴板\n\n打开百度网盘App，粘贴链接即可享受企业级急速下载\n无需等待，高速稳定！');
-                        
-                        // 3秒后恢复原始状态
-                        setTimeout(() => {
-                            this.classList.remove('bg-green-500');
-                            this.innerHTML = '<i class="fas fa-bolt text-2xl mr-3 text-yellow-300"></i><span class="font-bold">百度企业网盘急速下载</span>';
-                        }, 3000);
-                    }).catch(err => {
-                        console.error('复制失败:', err);
-                        alert('复制失败，请手动复制链接和提取码\n\n链接：'+panBaiduLink+'\n提取码：'+extractCode);
-                    });
+                    // 3秒后恢复原始状态
+                    setTimeout(() => {
+                        this.classList.remove('bg-green-500');
+                        this.innerHTML = '<i class="fas fa-bolt text-2xl mr-3 text-yellow-300"></i><span class="font-bold">百度企业网盘急速下载</span>';
+                    }, 3000);
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                    alert('复制失败，请手动复制链接\n\n链接：'+panBaiduLink);
                 });
             });
+        });
             
             // 添加额外的视觉效果 - 按钮脉冲动画
             function addPulseAnimation() {
@@ -543,8 +540,15 @@
                 );
             }
             
-            // 初始加载可见元素
-            lazyLoadImages();
+            // 页面加载完成后立即执行一次懒加载
+            window.addEventListener('load', function() {
+                lazyLoadImages();
+            });
+            
+            // DOM加载完成后也执行一次懒加载
+            window.addEventListener('DOMContentLoaded', function() {
+                lazyLoadImages();
+            });
             
             // 滚动时加载
             window.addEventListener('scroll', lazyLoadImages);
@@ -566,6 +570,15 @@
             window.addEventListener('scroll', () => {
                 throttle(lazyLoadImages, 200);
             });
+            
+            // 强制立即加载所有图片（作为备用方案）
+            setTimeout(() => {
+                const lazyImages = document.querySelectorAll('.lazy:not(.iframe-video)');
+                lazyImages.forEach(img => {
+                    img.src = img.getAttribute('data-src');
+                    img.classList.add('loaded');
+                });
+            }, 1000);
         });
     </script>
 </body>
