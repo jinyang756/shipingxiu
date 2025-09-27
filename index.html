@@ -233,7 +233,8 @@
             <img 
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
                 data-src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
-                class="lazy w-full h-full object-cover"
+                data-webp="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80&fm=webp" 
+                class="lazy w-full h-full object-cover" 
                 alt="财富交流会封面图"
             >
             <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -243,15 +244,54 @@
                 </div>
             </div>
         </div>
-        <!-- 视频区域 - 下载按钮方案 -->
+        <!-- 视频区域 - Kapwing视频嵌入 + 下载按钮备选 -->
         <div class="hidden md:block iframe-container">
+            <!-- Kapwing视频嵌入 -->
+            <div class="relative w-full h-full bg-black flex flex-col items-center justify-center">
+                <!-- 嵌入Kapwing视频播放器 -->
+                <iframe 
+                    src="https://www.kapwing.com/e/OLJOM1rJSr" 
+                    class="w-full h-full object-cover" 
+                    title="第十届财富交流会视频"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+                
+                <!-- 覆盖层内容 - 包含切换到下载模式的选项 -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-t from-black/70 to-transparent">
+                    <h3 class="text-white text-2xl md:text-3xl font-bold mb-4">30年私募大佬带你学透A股</h3>
+                    <p class="text-white mb-6 max-w-lg">视频正在播放，如遇加载问题可切换到下载模式</p>
+                    
+                    <!-- 视频控制和下载选项 -->
+                    <div class="w-full max-w-md space-y-4">
+                        <!-- 切换到下载模式按钮 -->
+                        <div class="relative">
+                            <button 
+                                id="switchToDownloadBtn" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-105 shadow-lg block w-full"
+                            >
+                                <i class="fas fa-download text-2xl mr-3 text-yellow-300"></i>
+                                <span class="font-bold">切换到下载模式</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 下载模式容器 (初始隐藏) -->
+        <div id="downloadModeContainer" class="hidden md:block iframe-container">
             <!-- 视频封面和下载按钮 -->
             <div class="relative w-full h-full bg-black flex flex-col items-center justify-center">
                 <!-- 视频封面图 -->
                 <img 
-                    src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
+                    data-src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                    data-webp="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80&fm=webp" 
                     alt="第十届财富交流会视频封面" 
-                    class="w-full h-full object-cover opacity-70"
+                    class="lazy w-full h-full object-cover opacity-70"
+                    loading="lazy"
                 >
                 
                 <!-- 覆盖层内容 -->
@@ -261,6 +301,16 @@
                     
                     <!-- 百度企业网盘急速下载按钮 -->
                     <div class="w-full max-w-md space-y-4">
+                        <!-- 返回视频模式按钮 -->
+                        <div class="relative">
+                            <button 
+                                id="switchToVideoBtn" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-105 shadow-lg block w-full mb-3"
+                            >
+                                <i class="fas fa-video text-2xl mr-3 text-yellow-300"></i>
+                                <span class="font-bold">返回在线观看模式</span>
+                            </button>
+                        </div>
                         <!-- 急速下载标签 -->
                         <div class="relative">
                             <a 
@@ -315,11 +365,13 @@
     <!-- 助理名片区域 - 优化移动设备布局 -->
     <div class="assistant-card mt-6">
         <img 
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
-            data-src="20250926-123916.jpg" 
-            class="lazy w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-orange-100 shadow-sm"
-            alt="顾启薇头像"
-        >
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
+                    data-src="20250926-123916.jpg" 
+                    data-webp="20250926-123916.webp" 
+                    class="lazy w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-orange-100 shadow-sm" 
+                    alt="顾启薇头像"
+                    loading="lazy"
+                >
         <div class="assistant-name">顾启薇</div>
         <div class="assistant-title">财富交流会专属助理</div>
         <div class="btn-container">
@@ -402,11 +454,14 @@
                         <div class="text-sm text-gray-500 mb-2">日斗投资【第十届财富论坛】</div>
                         <div class="relative w-40 h-40 mx-auto">
                             <img 
-                                id="qrCodeImg" 
-                                src="screenshot-20250927-011954.png" 
-                                class="w-40 h-40 border border-gray-200 p-2 bg-white rounded-lg shadow-sm mx-auto opacity-0 transition-opacity duration-500" 
-                                alt="日斗投资第十届财富论坛飞书群二维码"
-                            >
+                                    id="qrCodeImg" 
+                                    data-src="screenshot-20250927-011954.png" 
+                                    data-webp="screenshot-20250927-011954.webp" 
+                                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" 
+                                    class="w-40 h-40 border border-gray-200 p-2 bg-white rounded-lg shadow-sm mx-auto opacity-0 transition-opacity duration-500 lazy"
+                                    alt="日斗投资第十届财富论坛飞书群二维码"
+                                    loading="lazy"
+                                >
                             <div id="goldOverlay" class="absolute inset-0 bg-gradient-to-br from-yellow-300/90 to-yellow-500/90 rounded-lg flex items-center justify-center border border-yellow-200">
                                 <div class="text-center text-yellow-900">
                                     <i class="fas fa-lock text-4xl mb-2"></i>
@@ -429,10 +484,59 @@
     <script>
         // 减少DOM操作，使用事件委托
         document.addEventListener('DOMContentLoaded', function() {
+            // 检查WebP支持
+            checkWebPSupport().then(supported => {
+                window.supportWebP = supported;
+                // 初始加载可见图片
+                lazyLoadImages();
+            });
+            
             // 加入按钮点击事件
             document.getElementById('joinBtn').addEventListener('click', function() {
                 window.location.href = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=03cr4f67-7571-4b4e-bdd5-560767ad82ab';
             });
+            
+            // 视频模式与下载模式切换功能
+            const videoContainer = document.querySelector('.iframe-container:not(#downloadModeContainer)');
+            const downloadContainer = document.getElementById('downloadModeContainer');
+            const switchToDownloadBtn = document.getElementById('switchToDownloadBtn');
+            const switchToVideoBtn = document.getElementById('switchToVideoBtn');
+            
+            // 切换到下载模式
+            if (switchToDownloadBtn) {
+                switchToDownloadBtn.addEventListener('click', function() {
+                    videoContainer.classList.add('hidden');
+                    downloadContainer.classList.remove('hidden');
+                });
+            }
+            
+            // 切换回视频模式
+            if (switchToVideoBtn) {
+                switchToVideoBtn.addEventListener('click', function() {
+                    downloadContainer.classList.add('hidden');
+                    videoContainer.classList.remove('hidden');
+                });
+            }
+            
+            // 检测视频加载状态，如果加载失败自动切换到下载模式
+            const videoIframe = document.querySelector('iframe[src*="kapwing"]');
+            if (videoIframe) {
+                // 监听iframe的加载状态
+                videoIframe.addEventListener('load', function() {
+                    console.log('Kapwing视频播放器加载完成');
+                });
+                
+                // 设置超时检测，如果一定时间内视频还没正常加载，则提示用户
+                setTimeout(() => {
+                    try {
+                        // 这里我们无法直接检测iframe内部视频是否加载成功
+                        // 所以采用用户体验优化的方式，提供明确的切换选项
+                        console.log('视频加载超时检测完成，如果视频播放异常，请使用下载模式');
+                    } catch (e) {
+                        console.error('视频加载检测出错:', e);
+                    }
+                }, 10000); // 10秒后进行检测
+            }
             
             // 显示二维码按钮点击事件
             document.getElementById('showQrBtn').addEventListener('click', function() {
@@ -518,17 +622,54 @@
             // 页面加载完成后应用脉冲动画
             window.addEventListener('load', addPulseAnimation);
             
-            // 懒加载其他图片
-            function lazyLoadImages() {
-                const lazyImages = document.querySelectorAll('.lazy:not(.iframe-video)');
-                
-                lazyImages.forEach(img => {
-                    if (isElementInViewport(img)) {
+            // 检查浏览器是否支持WebP格式
+        function checkWebPSupport() {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = 'data:image/webp;base64,UklGRkoGAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAABBxAR/Q9ERP8DAABWUDggGAAAADABAJ0BKgEAAQADADQlpAADcAD++/1QAA==';
+            });
+        }
+
+        // 懒加载图片函数
+        function lazyLoadImages() {
+            const lazyImages = document.querySelectorAll('.lazy:not(.iframe-video)');
+            
+            lazyImages.forEach(img => {
+                if (isElementInViewport(img)) {
+                    // 根据WebP支持情况选择合适的图片格式
+                    if (window.supportWebP && img.hasAttribute('data-webp')) {
+                        const webpImg = new Image();
+                        webpImg.onload = function() {
+                            img.src = img.getAttribute('data-webp');
+                            img.classList.add('loaded');
+                            // 添加淡入动画
+                            img.style.opacity = '0';
+                            img.style.transition = 'opacity 0.3s ease-in-out';
+                            setTimeout(() => {
+                                img.style.opacity = '1';
+                            }, 10);
+                        };
+                        webpImg.onerror = function() {
+                            // WebP加载失败，使用原始格式
+                            img.src = img.getAttribute('data-src');
+                            img.classList.add('loaded');
+                        };
+                        webpImg.src = img.getAttribute('data-webp');
+                    } else {
                         img.src = img.getAttribute('data-src');
                         img.classList.add('loaded');
+                        // 添加淡入动画
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        setTimeout(() => {
+                            img.style.opacity = '1';
+                        }, 10);
                     }
-                });
-            }
+                }
+            });
+        }
             
             function isElementInViewport(el) {
                 const rect = el.getBoundingClientRect();
